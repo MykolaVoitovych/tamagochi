@@ -1,25 +1,25 @@
 <template>
     <div class="card">
         <div class="card-header">
-            Featured
+            {{ pet.type }} {{ pet.name }}
         </div>
         <div class="card-body">
             <Progres
                 key="1"
                 title="голод"
-                :value="10"
+                :value="pet.food"
                 type="food"
                 progressClass="bg-success"
             />
             <Progres
                 title="сон"
-                :value="20"
+                :value="pet.sleep"
                 type="sleep"
                 progressClass="bg-info"
             />
             <Progres
                 title="забота"
-                :value="30"
+                :value="pet.care"
                 type="care"
                 progressClass="bg-warning"
             />
@@ -29,11 +29,21 @@
 
 <script>
 import Progres from '../components/Progres'
+import {mapGetters} from 'vuex'
 
 export default {
     components: {
         Progres
     },
+    computed: {
+        ...mapGetters(['pets']),
+        pet () {
+            let pet = this.pets.filter(pet => pet.id == this.$route.params.id)
+            if (pet) {
+                return pet[0]
+            }
+        }
+    }
 }
 </script>
 

@@ -14,4 +14,9 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js').vue()
     .sass('resources/sass/app.scss', 'public/css', {
         implementation: require('node-sass')
-    });
+    })
+    .postCss('resources/css/auth.css', 'public/css', [
+        require('postcss-import'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+    ]);

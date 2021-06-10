@@ -49,6 +49,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'redirect_url' => url('/'),
+            ], 200);
+        }
+
         return redirect('/');
     }
 }

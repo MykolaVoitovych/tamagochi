@@ -4,8 +4,8 @@
 
         <div class="container">
             <div class="c-app-layout__inner">
-                <Show></Show>
-<!--                <router-view />-->
+<!--                <Show></Show>-->
+                <router-view />
             </div>
         </div>
     </main>

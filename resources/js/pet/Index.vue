@@ -1,10 +1,36 @@
 <template>
-
+    <div>
+        <div class="row">
+            <div
+                v-for="pet in pets"
+                class="col-sm-3"
+            >
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ pet.name }}</h5>
+                        <p class="card-text">{{ pet.type }}</p>
+                        <a href="#" class="btn btn-primary" @click.prevent="showPet(pet.id)">Show</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-    name: "Index"
+    computed: {
+        ...mapGetters([
+            'pets'
+        ])
+    },
+    methods: {
+        showPet (id) {
+            this.$router.push({ name: 'pets.show', params: { id: id }})
+        }
+    }
 }
 </script>
 

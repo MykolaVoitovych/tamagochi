@@ -37,6 +37,7 @@
         "optimize-css-assets-webpack-plugin": "^6.0.0",
         "ora": "^5.4.1",
         "vue": "^2.6.14",
+        "vue-router": "^3.5.1",
         "vuex": "^3.6.2",
         "webpack-livereload-plugin": "^3.0.1"
     }
