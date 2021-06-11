@@ -17,7 +17,7 @@ class Pet extends Model
         'care',
         'fun',
         'user_id',
-        'eat_at',
+        'food_at',
         'sleep_at',
         'care_at',
         'fun_at',
@@ -44,14 +44,14 @@ class Pet extends Model
         'care' => 'integer',
         'fun' => 'integer',
         'user_id' => 'integer',
-        'eat_at' => 'date',
-        'sleep_at' => 'date',
-        'care_at' => 'date',
-        'fun_at' => 'date',
-        'lower_food_at' => 'date',
-        'lower_sleep_at' => 'date',
-        'lower_care_at' => 'date',
-        'lower_fun_at' => 'date',
+        'food_at' => 'datetime',
+        'sleep_at' => 'datetime',
+        'care_at' => 'datetime',
+        'fun_at' => 'datetime',
+        'lower_food_at' => 'datetime',
+        'lower_sleep_at' => 'datetime',
+        'lower_care_at' => 'datetime',
+        'lower_fun_at' => 'datetime',
         'is_died' => 'boolean'
     ];
 
@@ -75,7 +75,7 @@ class Pet extends Model
         return collect([
             [
                 'title' => 'собака',
-                'value' => 'god',
+                'value' => 'dog',
             ],
             [
                 'title' => 'кот',

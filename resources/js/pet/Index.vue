@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div class="row">
+        <div
+            v-if="pets.length"
+            class="row"
+        >
             <div
                 v-for="pet in pets"
                 class="col-sm-3"
@@ -13,6 +16,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="d-flex justify-content-center" v-else>
+            <p>You don't have pets. But you can <router-link :to="{ name: 'pets.create' }">Create Pet</router-link></p>
         </div>
     </div>
 </template>

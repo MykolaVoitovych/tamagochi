@@ -13,7 +13,7 @@ class Update extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            //
+            'attribute' => 'required|in:food,sleep,care,fun'
         ];
     }
 }

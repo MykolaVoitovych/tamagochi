@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UpdatePet;
 use App\Models\Pet;
 use App\Http\Requests\Pet\Create as CreateRequest;
 use App\Http\Requests\Pet\Update as UpdateRequest;
@@ -26,9 +27,9 @@ class PetsController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        $date = now()->format('Y-m-d H:i:s');
+        $date = now();
         $data = $request->validated() + [
-            'eat_at' => $date,
+            'food_at' => $date,
             'sleep_at' => $date,
             'care_at' => $date,
             'fun_at' => $date,
@@ -39,7 +40,7 @@ class PetsController extends Controller
         ];
 
         $pet = auth()->user()->pets()->create($data);
-        //TODO action create
+        event(new UpdatePet());
 
         return $pet;
     }
@@ -62,8 +63,18 @@ class PetsController extends Controller
      */
     public function update(UpdateRequest $request, Pet $pet)
     {
+        $attributeName = $request->get('attribute');
+        $attribute = data_get($pet, $attributeName);
+        if ($attribute < 100) {
+            $pet->update([
+                $attributeName => data_get($pet, $attributeName) + 1,
+                "{$attributeName}_at" => now()
+            ]);
+            event(new UpdatePet());
+            $pet->refresh();
+        }
 
-        //TODO action update
+        return $pet;
     }
 
     /**

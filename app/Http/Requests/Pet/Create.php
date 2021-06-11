@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Pet;
 
+use App\Models\Pet;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class Create extends FormRequest
 {
@@ -25,7 +27,10 @@ class Create extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'type' => ['required'],
+            'type' => [
+                'required',
+                Rule::in(Pet::types()->pluck('value')->toArray())
+            ],
         ];
     }
 }

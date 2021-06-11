@@ -5,21 +5,23 @@
         </div>
         <div class="card-body">
             <Progres
-                key="1"
                 title="голод"
-                :value="pet.food"
+                :pet="pet"
+                :can-update="canUpdate('food', 5)"
                 type="food"
                 progressClass="bg-success"
             />
             <Progres
                 title="сон"
-                :value="pet.sleep"
+                :pet="pet"
+                :can-update="canUpdate('sleep', 10)"
                 type="sleep"
                 progressClass="bg-info"
             />
             <Progres
                 title="забота"
-                :value="pet.care"
+                :pet="pet"
+                :can-update="canUpdate('care', 1)"
                 type="care"
                 progressClass="bg-warning"
             />
@@ -30,6 +32,7 @@
 <script>
 import Progres from '../components/Progres'
 import {mapGetters} from 'vuex'
+import moment from 'moment'
 
 export default {
     components: {
@@ -42,6 +45,15 @@ export default {
             if (pet) {
                 return pet[0]
             }
+        },
+    },
+    methods: {
+        canUpdate (attribute, minutes) {
+            if (this.pet[attribute] < 100) {
+                let lastUpdate = moment(this.pet[`${attribute}_at`]).add(minutes, 'm')
+                return moment().isAfter(lastUpdate)
+            }
+            return false
         }
     }
 }

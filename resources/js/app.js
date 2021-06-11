@@ -22,7 +22,14 @@ if (document.getElementById('app')) {
     app = new Vue({
         router,
         store,
-        render: h => h(Base)
+        render: h => h(Base),
+        created() {
+            window.Echo.channel('my-channel').listen(".event", response => {
+                if (response.userId === store.state.user.id) {
+                    store.dispatch('loadPets')
+                }
+            });
+        }
     }).$mount('#app')
 }
 

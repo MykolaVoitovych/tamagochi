@@ -22,7 +22,7 @@ class CreatePetsTable extends Migration
             $table->integer('care');
             $table->integer('fun');
             $table->integer('user_id');
-            $table->timestamp('eat_at');
+            $table->timestamp('food_at');
             $table->timestamp('sleep_at');
             $table->timestamp('care_at');
             $table->timestamp('fun_at');

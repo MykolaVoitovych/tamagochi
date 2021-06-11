@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="align-items: center; justify-content: center; padding: 10px">
+    <div class="row d-flex justify-content-center align-items-center p-2">
         <div class="col-1">
             {{ title }}
         </div>
@@ -10,18 +10,20 @@
                     :class="progressClass"
                     role="progressbar"
                     :style="progressStyle"
-                    :aria-valuenow="value"
+                    :aria-valuenow="pet[type]"
                     aria-valuemin="0"
                     aria-valuemax="100"
                 >
+                    {{ pet[type] }}
                 </div>
             </div>
         </div>
         <div class="col-1">
             <button
-                :class="progressClass"
                 class="btn"
-                @click="updateCharacteristic"
+                :class="progressClass"
+                :disabled="!canUpdate"
+                @click="updateAttribute"
             >
                 Add
             </button>
@@ -30,14 +32,17 @@
 </template>
 
 <script>
+import {update} from '../api/pet'
+import {mapActions} from 'vuex'
+
 export default {
     props: {
         title: {
             type: String,
             required: true
         },
-        value: {
-            type: Number,
+        pet: {
+            type: Object,
             required: true
         },
         progressClass: {
@@ -48,16 +53,25 @@ export default {
         type: {
             type: String,
             required: true
+        },
+        canUpdate: {
+            type: Boolean,
+            required: false,
+            default: true
         }
     },
     computed: {
         progressStyle () {
-            return `width: ${this.value}%`
+            return `width: ${this.pet[this.type]}%`
         }
     },
     methods: {
-        updateCharacteristic () {
-            //
+        ...mapActions(['loadPets']),
+        updateAttribute () {
+            update(this.pet.id, {attribute: this.type})
+                .then(response => {
+                    this.loadPets()
+                });
         }
     }
 }
