@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         user: null,
         petTypes: [],
-        pets: []
+        pets: [],
+        settings: []
     },
     getters: {
         petTypes (state) {
@@ -16,12 +17,16 @@ export default new Vuex.Store({
         },
         pets (state) {
             return state.pets
+        },
+        settings (state) {
+            return state.settings
         }
     },
     mutations: {
         setUser: (state, user) => (state.user = user),
         setPetTypes: (state, petTypes) => (state.petTypes = petTypes),
         setPets: (state, pets) => (state.pets = pets),
+        setSettings: (state, settings) => (state.settings = settings),
     },
     actions: {
         loadPets ({commit}) {

@@ -33,7 +33,7 @@
 
 <script>
 import {update} from '../api/pet'
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 import moment from "moment";
 
 export default {
@@ -54,10 +54,6 @@ export default {
         type: {
             type: String,
             required: true
-        },
-        updateMinutes: {
-            type: Number,
-            required: true
         }
     },
     data () {
@@ -66,11 +62,16 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['settings']),
+        increaseInterval () {
+            let setting = this.settings.filter(setting => setting.name = this.type)
+            return setting[0]['increase_interval']
+        },
         progressStyle () {
             return `width: ${this.pet[this.type]}%`
         },
         lastUpdate () {
-            return moment(this.pet[`${this.type}_at`]).add(this.updateMinutes, 'm')
+            return moment(this.pet[`${this.type}_at`]).add(this.increaseInterval, 'm')
         },
         canUpdate () {
             return moment(this.now).isAfter(this.lastUpdate)

@@ -41,8 +41,8 @@ class UpdateCharacteristics extends Command
      */
     public function handle()
     {
-        $this->pets->lowerFood(now()->subMinutes(10));
-        $this->pets->dieLowerFood(now()->subMinutes(60));
+        $this->pets->lowerFood();
+        $this->pets->dieLowerFood();
         $this->pets->lowerSleep(now()->subMinutes(20));
         $this->pets->lowerCare(
             now()->subMinutes(15),
