@@ -14,15 +14,15 @@ class UpdatePet  implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userId;
+    public $petIds;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(array $petIds)
     {
-        $this->userId = auth()->id();
+        $this->petIds = $petIds;
     }
 
     /**

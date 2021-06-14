@@ -9,45 +9,66 @@ use App\Models\Pet;
 
 class PetRepository
 {
-    public function updateFood($lowerTime, $diedTime)
+    public function lowerAttribute(string $attribute, array $ids) : int
     {
-        $result = Pet::isAlive()->where('food', '>=', 5)
+        return Pet::whereIn('id', $ids)
+            ->update([
+                "lower_{$attribute}_at" => now(),
+                $attribute => \DB::raw($attribute . ' - 1')
+            ]);
+    }
+
+    public function lowerFood($lowerTime)
+    {
+        $updatedIds = Pet::isAlive()
+            ->where('food', '>=', 5)
             ->whereTime('lower_food_at', '<=', $lowerTime)
-            ->update([
-                'lower_food_at' => now(),
-                'food' => \DB::raw('food - 1')
-            ]);
+            ->get()
+            ->pluck('id')
+            ->toArray();
 
-        $diedResult = Pet::isAlive()
+        if (count($updatedIds)) {
+            $this->lowerAttribute('food', $updatedIds);
+            event(new UpdatePet($updatedIds));
+        }
+    }
+
+    public function dieLowerFood($diedTime)
+    {
+        $diedIds = Pet::isAlive()
             ->where('food', '<', 5)
-            ->whereTime('lower_food_at', '<=', $diedTime)
-            ->update([
-                'is_died' => true,
-                'food' => 0
-            ]);
+            ->whereTime('food_at', '<=', $diedTime)
+            ->get()
+            ->pluck('id')
+            ->toArray();
 
-        if ($result || $diedResult) {
-            event(new UpdatePet());
+        if (count($diedIds)) {
+            Pet::whereIn('id', $diedIds)
+                ->update([
+                    'is_died' => true,
+                    'food' => 0
+                ]);
+            event(new UpdatePet($diedIds));
         }
     }
 
-    public function updateSleep($lowerTime)
+    public function lowerSleep($lowerTime)
     {
-        $result = Pet::isAlive()
+        $petIds = Pet::isAlive()
             ->whereTime('lower_sleep_at', '<=', $lowerTime)
-            ->update([
-                'lower_sleep_at' => now(),
-                'sleep' => \DB::raw('sleep - 1')
-            ]);
+            ->get()
+            ->pluck('id')
+            ->toArray();
 
-        if ($result) {
-            event(new UpdatePet());
+        if (count($petIds)) {
+            $this->lowerAttribute('sleep', $petIds);
+            event(new UpdatePet($petIds));
         }
     }
 
-    public function updateCare($lowerTime, $anotherLowerTime)
+    public function lowerCare($lowerTime, $anotherLowerTime)
     {
-        $result = Pet::isAlive()
+        $petIds = Pet::isAlive()
             ->where(function ($query) use ($lowerTime) {
                 $query->where('sleep', '>=', 5)
                     ->whereTime('lower_care_at', '<=', $lowerTime);
@@ -56,13 +77,13 @@ class PetRepository
                 $query->where('sleep', '<', 5)
                     ->whereTime('lower_care_at', '<=', $anotherLowerTime);
             })
-            ->update([
-                'lower_care_at' => now(),
-                'care' => \DB::raw('care - 1')
-            ]);
+            ->get()
+            ->pluck('id')
+            ->toArray();
 
-        if ($result) {
-            event(new UpdatePet());
+        if (count($petIds)) {
+            $this->lowerAttribute('care', $petIds);
+            event(new UpdatePet($petIds));
         }
     }
 }

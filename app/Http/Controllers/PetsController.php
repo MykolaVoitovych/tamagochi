@@ -40,7 +40,7 @@ class PetsController extends Controller
         ];
 
         $pet = auth()->user()->pets()->create($data);
-        event(new UpdatePet());
+        event(new UpdatePet([$pet->id]));
 
         return $pet;
     }
@@ -70,7 +70,7 @@ class PetsController extends Controller
                 $attributeName => data_get($pet, $attributeName) + 1,
                 "{$attributeName}_at" => now()
             ]);
-            event(new UpdatePet());
+            event(new UpdatePet([$pet->id]));
             $pet->refresh();
         }
 
@@ -86,6 +86,7 @@ class PetsController extends Controller
     public function destroy(Pet $pet)
     {
         $pet->delete();
+        event(new UpdatePet([$pet->id]));
         return $pet;
     }
 }

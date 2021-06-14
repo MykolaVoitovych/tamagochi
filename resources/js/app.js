@@ -25,8 +25,15 @@ if (document.getElementById('app')) {
         render: h => h(Base),
         created() {
             window.Echo.channel('my-channel').listen(".event", response => {
-                if (response.userId === store.state.user.id) {
-                    store.dispatch('loadPets')
+                if (response.petIds && Array.isArray(response.petIds)) {
+                    let currentPetIds = store.state.pets.map(pet => pet.id)
+                    response.petIds.every(id => {
+                        if (currentPetIds.includes(id)) {
+                            store.dispatch('loadPets')
+                            return false
+                        }
+                        return true
+                    })
                 }
             });
         }

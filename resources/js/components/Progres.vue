@@ -34,6 +34,7 @@
 <script>
 import {update} from '../api/pet'
 import {mapActions} from 'vuex'
+import moment from "moment";
 
 export default {
     props: {
@@ -54,16 +55,32 @@ export default {
             type: String,
             required: true
         },
-        canUpdate: {
-            type: Boolean,
-            required: false,
-            default: true
+        updateMinutes: {
+            type: Number,
+            required: true
+        }
+    },
+    data () {
+        return {
+            now: Date.now()
         }
     },
     computed: {
         progressStyle () {
             return `width: ${this.pet[this.type]}%`
+        },
+        lastUpdate () {
+            return moment(this.pet[`${this.type}_at`]).add(this.updateMinutes, 'm')
+        },
+        canUpdate () {
+            return moment(this.now).isAfter(this.lastUpdate)
         }
+    },
+    created() {
+        var self = this
+        setInterval(function () {
+            self.now = Date.now()
+        }, 1000)
     },
     methods: {
         ...mapActions(['loadPets']),
