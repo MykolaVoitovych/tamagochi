@@ -18,12 +18,12 @@ class PetRepository
         $this->settings = $settings;
     }
 
-    protected function getSettingByName($name)
+    protected function getSettingByName(string $name)
     {
         return $this->settings->firstWhere('name', $name);
     }
 
-    public function decrease(string $attribute, array $ids) : int
+    public function decrease(string $attribute, array $ids): void
     {
         if (count($ids)) {
             Pet::whereIn('id', $ids)
@@ -36,17 +36,18 @@ class PetRepository
         }
     }
 
-    public function increase(Pet $pet, $attributeName)
+    public function increase(Pet $pet, string $attributeName): void
     {
         if ($this->canIncrease($pet, $attributeName)) {
             $pet->update([
-                $attributeName => data_get($pet, $attributeName) + 1,
+                $attributeName => $pet->$attributeName + 1,
                 "{$attributeName}_at" => now()
             ]);
+            event(new UpdatePet([$pet->id]));
         }
     }
 
-    public function canIncrease(Pet $pet, $attributeName)
+    public function canIncrease(Pet $pet, string $attributeName) : bool
     {
         $setting = $this->getSettingByName($attributeName);
         if ($setting) {
@@ -61,7 +62,7 @@ class PetRepository
         return false;
     }
 
-    public function lowerFood()
+    public function lowerFood(): void
     {
         $setting = $this->getSettingByName('food');
         $lowerTime = now()->subMinutes($setting->decrease_interval);
@@ -75,7 +76,7 @@ class PetRepository
         $this->decrease('food', $petIds);
     }
 
-    public function dieLowerFood()
+    public function dieLowerFood(): void
     {
         $setting = $this->getSettingByName('food');
         $diedTime = now()->subMinutes($setting->critical_interval);
@@ -96,7 +97,7 @@ class PetRepository
         }
     }
 
-    public function lowerSleep()
+    public function lowerSleep(): void
     {
         $setting = $this->getSettingByName('sleep');
         $lowerTime = now()->subMinutes($setting->decrease_interval);
@@ -107,11 +108,11 @@ class PetRepository
         $this->decrease('sleep', $petIds);
     }
 
-    public function lowerCare($lowerTime, $anotherLowerTime)
+    public function lowerCare(): void
     {
-        $setting = $this->getSettingByName('sleep');
+        $setting = $this->getSettingByName('care');
         $lowerTime = now()->subMinutes($setting->decrease_interval);
-        $criticalTime = now()->subMinutes($setting->decrease_interval);
+        $criticalTime = now()->subMinutes($setting->critical_interval);
 
         $query = Pet::isAlive()
             ->where(function ($query) use ($setting, $lowerTime) {
@@ -128,7 +129,7 @@ class PetRepository
         $this->decrease('care', $petIds);
     }
 
-    protected function getPetIds($query) : array
+    protected function getPetIds(Builder $query) : array
     {
         return $query->get()
             ->pluck('id')

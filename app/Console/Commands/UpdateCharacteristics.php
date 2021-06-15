@@ -43,10 +43,7 @@ class UpdateCharacteristics extends Command
     {
         $this->pets->lowerFood();
         $this->pets->dieLowerFood();
-        $this->pets->lowerSleep(now()->subMinutes(20));
-        $this->pets->lowerCare(
-            now()->subMinutes(15),
-            now()->subMinutes(5)
-        );
+        $this->pets->lowerSleep();
+        $this->pets->lowerCare();
     }
 }

@@ -23,7 +23,7 @@ class Setting extends Model
 
     public function getCriticalIntervalAttribute()
     {
-        $originalValue = $this->getOriginal('critical_interval');
+        $originalValue = $this->getRawOriginal('critical_interval');
         if (!$originalValue) {
             return $this->decrease_interval / 3;
         }

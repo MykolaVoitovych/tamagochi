@@ -6,9 +6,17 @@ use App\Events\UpdatePet;
 use App\Models\Pet;
 use App\Http\Requests\Pet\Create as CreateRequest;
 use App\Http\Requests\Pet\Update as UpdateRequest;
+use App\Repositories\PetRepository;
 
 class PetsController extends Controller
 {
+    protected $pets;
+
+    public function __construct(PetRepository $pets)
+    {
+        $this->pets = $pets;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -63,16 +71,8 @@ class PetsController extends Controller
      */
     public function update(UpdateRequest $request, Pet $pet)
     {
-        $attributeName = $request->get('attribute');
-        $attribute = data_get($pet, $attributeName);
-        if ($attribute < 100) {
-            $pet->update([
-                $attributeName => data_get($pet, $attributeName) + 1,
-                "{$attributeName}_at" => now()
-            ]);
-            event(new UpdatePet([$pet->id]));
-            $pet->refresh();
-        }
+        $this->pets->increase($pet, $request->get('attribute'));
+        $pet->refresh();
 
         return $pet;
     }
