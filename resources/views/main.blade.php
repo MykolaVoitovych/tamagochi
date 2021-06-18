@@ -7,7 +7,7 @@
         data-user='{{ auth()->user() }}'
         data-pet-types='{{ \App\Models\Pet::types() }}'
         data-pets='{{ auth()->user()->pets }}'
-        data-settings='{{ \App\Models\Setting::all() }}'
+        data-settings='{{ \App\Models\Attribute::all() }}'
     >
     </main>
 @endsection

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Setting;
+use App\Models\Attribute;
 use Illuminate\Database\Seeder;
 
-class SettingsTableSeeder extends Seeder
+class AttributesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,21 +16,21 @@ class SettingsTableSeeder extends Seeder
     {
         $data = collect([
             [
-                'name' => 'food',
+                'name' => Attribute::FOOD,
                 'increase_interval' => 5,
                 'decrease_interval' => 10,
                 'critical_value' => 5,
                 'critical_interval' => 60
             ],
             [
-                'name' => 'sleep',
+                'name' => Attribute::SLEEP,
                 'increase_interval' => 10,
                 'decrease_interval' => 20,
                 'critical_value' => 5,
                 'critical_interval' => 0
             ],
             [
-                'name' => 'care',
+                'name' => Attribute::CARE,
                 'increase_interval' => 5,
                 'decrease_interval' => 15,
                 'critical_value' => 0,
@@ -39,7 +39,7 @@ class SettingsTableSeeder extends Seeder
         ]);
 
         foreach ($data as $item) {
-            Setting::firstOrCreate([
+            Attribute::firstOrCreate([
                 'name' => $item['name']
             ], $item);
         }

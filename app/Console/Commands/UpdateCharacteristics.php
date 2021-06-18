@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\AttributePet;
+use App\Models\Pet;
 use App\Repositories\PetRepository;
 use Illuminate\Console\Command;
 
@@ -41,9 +43,22 @@ class UpdateCharacteristics extends Command
      */
     public function handle()
     {
-        $this->pets->lowerFood();
-        $this->pets->dieLowerFood();
-        $this->pets->lowerSleep();
-        $this->pets->lowerCare();
+        $attributePets = AttributePet::whereHas('pet', function ($query) {
+            $query->isAlive();
+        })->get();
+
+        $needDecreaseAttributePets = [];
+        $needDieAttributePetIds = [];
+
+        foreach ($attributePets as $attributePet) {
+            if ($attributePet->canDecrease()) {
+                array_push($needDecreaseAttributePets, $attributePet->id);
+            } else if ($attributePet->canDie()) {
+                array_push($needDieAttributePetIds, $attributePet->id);
+            }
+        }
+
+        $this->pets->decrease($needDecreaseAttributePets);
+        $this->pets->die($needDieAttributePetIds);
     }
 }

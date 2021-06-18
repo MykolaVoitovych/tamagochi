@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Setting extends Model
+class Attribute extends Model
 {
     use HasFactory;
+
+    const FOOD = 'food';
+    const SLEEP = 'sleep';
+    const CARE = 'care';
 
     protected $fillable = [
         'name',
@@ -20,6 +24,12 @@ class Setting extends Model
     ];
 
     public $timestamps = false;
+
+    public function pets()
+    {
+        return $this->belongsToMany(Pet::class)
+            ->using(AttributePet::class);
+    }
 
     public function getCriticalIntervalAttribute()
     {

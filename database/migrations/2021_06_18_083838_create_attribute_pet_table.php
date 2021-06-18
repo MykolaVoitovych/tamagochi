@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePetsTable extends Migration
+class CreateAttributePetTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreatePetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pets', function (Blueprint $table) {
+        Schema::create('attribute_pet', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->integer('user_id');
-            $table->boolean('is_died');
+            $table->integer('pet_id');
+            $table->integer('attribute_id');
+            $table->integer('value');
+            $table->timestamp('dt_increased');
+            $table->timestamp('dt_decreased');
         });
     }
 
@@ -29,6 +30,6 @@ class CreatePetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pets');
+        Schema::dropIfExists('attribute_pet');
     }
 }

@@ -35,19 +35,7 @@ class PetsController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        $date = now();
-        $data = $request->validated() + [
-            'food_at' => $date,
-            'sleep_at' => $date,
-            'care_at' => $date,
-            'fun_at' => $date,
-            'lower_food_at' => $date,
-            'lower_sleep_at' => $date,
-            'lower_care_at' => $date,
-            'lower_fun_at' => $date,
-        ];
-
-        $pet = auth()->user()->pets()->create($data);
+        $pet = auth()->user()->pets()->create($request->validated());
         event(new UpdatePet([$pet->id]));
 
         return $pet;
