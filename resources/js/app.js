@@ -18,7 +18,6 @@ if (document.getElementById('app')) {
     store.commit('setUser', JSON.parse(appElement.dataset.user))
     store.commit('setPetTypes', JSON.parse(appElement.dataset.petTypes))
     store.commit('setPets', JSON.parse(appElement.dataset.pets))
-    store.commit('setSettings', JSON.parse(appElement.dataset.settings))
 
     app = new Vue({
         router,

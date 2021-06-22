@@ -23,12 +23,27 @@ class Attribute extends Model
         'critical_interval'
     ];
 
+    protected $appends = [
+        'value',
+        'dt_increased'
+    ];
+
     public $timestamps = false;
 
     public function pets()
     {
         return $this->belongsToMany(Pet::class)
             ->using(AttributePet::class);
+    }
+
+    public function getValueAttribute()
+    {
+        return optional($this->pivot)->value;
+    }
+
+    public function getDtIncreasedAttribute()
+    {
+        return optional($this->pivot)->dt_increased;
     }
 
     public function getCriticalIntervalAttribute()

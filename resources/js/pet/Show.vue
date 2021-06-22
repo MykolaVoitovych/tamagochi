@@ -8,25 +8,11 @@
         </div>
         <div class="card-body">
             <Progres
-                title="голод"
+                v-for="attribute in pet.attributes"
+                :key="attribute.id"
+                :attribute="attribute"
                 :pet="pet"
-                :update-minutes="5"
-                type="food"
                 progressClass="bg-success"
-            />
-            <Progres
-                title="сон"
-                :pet="pet"
-                :update-minutes="10"
-                type="sleep"
-                progressClass="bg-info"
-            />
-            <Progres
-                title="забота"
-                :pet="pet"
-                :update-minutes="5"
-                type="care"
-                progressClass="bg-warning"
             />
         </div>
     </div>

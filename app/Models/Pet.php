@@ -16,6 +16,10 @@ class Pet extends Model
         'is_died'
     ];
 
+    protected $appends = [
+        'attributes'
+    ];
+
     protected $attributes = [
         'is_died' => 0
     ];
@@ -25,6 +29,10 @@ class Pet extends Model
         'type' => 'string',
         'user_id' => 'integer',
         'is_died' => 'boolean'
+    ];
+
+    protected $with = [
+        'attributes'
     ];
 
     public $timestamps = false;
@@ -40,6 +48,11 @@ class Pet extends Model
         });
     }
 
+    public function getAttributesAttribute()
+    {
+        return $this->attributes;
+    }
+
     /*
      * Relationship
      */
@@ -51,7 +64,8 @@ class Pet extends Model
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class)
-            ->using(AttributePet::class);
+            ->using(AttributePet::class)
+            ->withPivot('value', 'dt_decreased', 'dt_increased');
     }
 
     /*
@@ -64,7 +78,7 @@ class Pet extends Model
 
     public function getAttributeByName($attributeName)
     {
-        return $this->attributes->firstWhere('name', $attributeName);
+        return $this->attributes()->firstWhere('name', $attributeName);
     }
 
     public static function types()
